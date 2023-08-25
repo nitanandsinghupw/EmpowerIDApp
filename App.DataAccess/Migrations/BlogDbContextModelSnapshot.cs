@@ -3,19 +3,16 @@ using App.DataAccess.BlogDbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BlogAPI.Migrations
+namespace App.DataAccess.Migrations
 {
-    [DbContext(typeof(BlogDbContext))]
-    [Migration("20230824131634_Initial")]
-    partial class Initial
+    
+    partial class BlogDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +21,7 @@ namespace BlogAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Entity.BlogPost", b =>
+            modelBuilder.Entity("App.Entity.Database.BlogPost", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,11 +30,9 @@ namespace BlogAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -45,7 +40,7 @@ namespace BlogAPI.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Entity.Comment", b =>
+            modelBuilder.Entity("App.Entity.Database.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +52,6 @@ namespace BlogAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -67,9 +61,9 @@ namespace BlogAPI.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Entity.Comment", b =>
+            modelBuilder.Entity("App.Entity.Database.Comment", b =>
                 {
-                    b.HasOne("Entity.BlogPost", "Post")
+                    b.HasOne("App.Entity.Database.BlogPost", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -78,7 +72,7 @@ namespace BlogAPI.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Entity.BlogPost", b =>
+            modelBuilder.Entity("App.Entity.Database.BlogPost", b =>
                 {
                     b.Navigation("Comments");
                 });

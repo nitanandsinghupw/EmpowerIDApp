@@ -1,4 +1,4 @@
-﻿using App.Entity.Service;
+﻿using App.Entity.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.DataAccess.BlogDbContext

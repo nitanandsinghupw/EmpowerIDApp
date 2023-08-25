@@ -5,6 +5,7 @@ using AutoMapper;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BlogPost = App.Entity.Database.BlogPost;
 
 namespace BlogAPI.Controllers
 {

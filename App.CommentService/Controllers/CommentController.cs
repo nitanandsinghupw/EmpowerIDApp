@@ -1,6 +1,6 @@
 using App.DataAccess.BlogDbContext;
 using App.Entity;
-using App.Entity.Service;
+using App.Entity.Database;
 using AutoMapper;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.AspNetCore.Mvc;
