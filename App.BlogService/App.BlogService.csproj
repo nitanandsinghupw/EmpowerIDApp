@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\App.DataAccess\App.DataAccess.csproj" />
   </ItemGroup>
 
