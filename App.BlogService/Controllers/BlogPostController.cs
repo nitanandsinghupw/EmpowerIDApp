@@ -1,11 +1,13 @@
 ﻿using App.DataAccess.BlogDbContext;
 using App.Entity;
+using App.Entity.Database;
 using App.Entity.Interface;
 using App.Entity.Service;
 using AutoMapper;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.AspNetCore.Mvc;
-using BlogPost = App.Entity.Database.BlogPost;
+using Microsoft.EntityFrameworkCore;
+ 
 
 namespace BlogAPI.Controllers
 {
@@ -34,17 +36,25 @@ namespace BlogAPI.Controllers
         [HttpGet]
         public  IActionResult GetPosts()
         {             
-            List<BlogPost> blogPosts = new List<BlogPost>();
-            var cacheData = _redisCache.GetCacheData<List<BlogPost>>("posts");
+            List<App.Entity.Database.BlogPost> blogPosts = new List<App.Entity.Database.BlogPost>();
+            var cacheData = _redisCache.GetCacheData<List<App.Entity.Database.BlogPost>>("posts");
             if (cacheData != null)
             {
                 blogPosts = cacheData;
             }
+
+            blogPosts = _dbContext.Posts.ToList();
+            // Fetch comments for each blog post and map them
+            foreach (var post in blogPosts)
+            {
+                post.Comments = _commentService.GetPostComments(post.Id).Result;
+            }
+
             if (blogPosts != null)
             {
                 var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
                 _redisCache.SetCacheData("posts", blogPosts, expirationTime);
-                return Ok(blogPosts);
+                return ApiResponse(blogPosts);
             }
             else
             {
@@ -56,28 +66,33 @@ namespace BlogAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPostById(int id)
         {
-            BlogPost blogPost = new BlogPost();
-            var cacheData = _redisCache.GetCacheData<BlogPost>("blogPost-"+ id);
+            App.Entity.Database.BlogPost blogPost = new App.Entity.Database.BlogPost();
+            var cacheData = _redisCache.GetCacheData<App.Entity.Database.BlogPost>("blogPost-"+ id);
             if (cacheData != null)
             {
                 blogPost = cacheData;
             }
 
-            var comment = _commentService.GetPostComments(id);
+            blogPost = _dbContext.Posts.FirstOrDefault(p => p.Id == id);            
 
             if (blogPost == null)
             {
                 return NotFound(new ApiResponse<string> { Success = false, Message = "Post not found" });
             }
+
+            var comment = _commentService.GetPostComments(id);
+
+
+            blogPost.Comments = comment.Result.ToList();
             var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-            _redisCache.SetCacheData<BlogPost>("blogPost-" + id, blogPost, expirationTime);
+            _redisCache.SetCacheData<App.Entity.Database.BlogPost>("blogPost-" + id, blogPost, expirationTime);
             return ApiResponse(blogPost);
         }
 
         [HttpPost]
-        public IActionResult CreatePost(BlogPost post)
+        public IActionResult CreatePost(App.Entity.Service.BlogPost post)
         {
-            var entityBlogPost = _mapper.Map<BlogPost>(post);
+            var entityBlogPost = _mapper.Map<App.Entity.Database.BlogPost>(post);
 
             _dbContext.Posts.Add(entityBlogPost);
             _dbContext.SaveChanges();
@@ -112,14 +127,13 @@ namespace BlogAPI.Controllers
                 return NotFound(new ApiResponse<string> { Success = false, Message = "Post not found" });
             }
 
-            _dbContext.Posts.Remove(post);
-
-            var comments = _dbContext.Comments.FirstOrDefault(p => p.PostId == id);
-            if (comments != null)
-            {
-                _dbContext.Comments.Remove(comments);
-            }
+            _dbContext.Posts.Remove(post);           
             _dbContext.SaveChanges();
+
+            //remove comments with post
+
+            var comment = _commentService.DeletePostComment(id);
+
             _redisCache.RemoveData("posts");
             return Ok(new ApiResponse<string> { Success = true, Message = "Post deleted successfully" });
         }

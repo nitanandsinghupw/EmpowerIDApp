@@ -7,6 +7,8 @@ using Polly;
 using Polly.Extensions.Http;
 using App.Entity;
 using App.Entity.Interface;
+using App.Entity.Service;
+using App.Entity.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 

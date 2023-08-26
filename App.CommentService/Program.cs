@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
-using AzureRedisCacheDemo.Helper;
+ 
 using App.DataAccess.BlogDbContext;
+using App.Entity.Interface;
+using App.Entity.Service;
+using App.Entity.Database;
+using AzureRedisCacheDemo.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +32,11 @@ builder.Services.AddControllers()
    .AddNewtonsoftJson(options =>
    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+
+builder.Services.AddHttpClient<ICommentService, CommentService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]);
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
