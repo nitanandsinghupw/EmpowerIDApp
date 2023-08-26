@@ -1,8 +1,8 @@
-using App.DataAccess.BlogDbContext;
-using AspNetCoreRateLimit;
-using AzureRedisCacheDemo.Helper;
-using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.EntityFrameworkCore;
+using AspNetCoreRateLimit;
+using AzureRedisCacheDemo.Repositories.AzureRedisCache;
+using AzureRedisCacheDemo.Helper;
+using App.DataAccess.BlogDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 

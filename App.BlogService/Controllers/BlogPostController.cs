@@ -1,10 +1,10 @@
 ﻿using App.DataAccess.BlogDbContext;
 using App.Entity;
+using App.Entity.Interface;
 using App.Entity.Service;
 using AutoMapper;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using BlogPost = App.Entity.Database.BlogPost;
 
 namespace BlogAPI.Controllers
@@ -16,13 +16,14 @@ namespace BlogAPI.Controllers
         private readonly BlogDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IRedisCache _redisCache;
+        private readonly ICommentService _commentService;
 
-
-        public BlogPostController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache)
+        public BlogPostController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache, ICommentService  commentService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _redisCache = redisCache;
+            _commentService = commentService;
         }
 
         private IActionResult ApiResponse<T>(T data)
@@ -31,25 +32,25 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPosts()
-        {
+        public  IActionResult GetPosts()
+        {             
             List<BlogPost> blogPosts = new List<BlogPost>();
             var cacheData = _redisCache.GetCacheData<List<BlogPost>>("posts");
             if (cacheData != null)
             {
                 blogPosts = cacheData;
             }
-            blogPosts = _dbContext.Posts.Include(p => p.Comments).ToList();
             if (blogPosts != null)
             {
                 var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-                _redisCache.SetCacheData<List<BlogPost>>("posts", blogPosts, expirationTime);
+                _redisCache.SetCacheData("posts", blogPosts, expirationTime);
                 return Ok(blogPosts);
             }
             else
             {
                 return NoContent();
             }
+
         }
 
         [HttpGet("{id}")]
@@ -61,7 +62,8 @@ namespace BlogAPI.Controllers
             {
                 blogPost = cacheData;
             }
-            blogPost = _dbContext.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
+
+            var comment = _commentService.GetPostComments(id);
 
             if (blogPost == null)
             {

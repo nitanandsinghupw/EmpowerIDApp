@@ -3,6 +3,10 @@ using AspNetCoreRateLimit;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using AzureRedisCacheDemo.Helper;
 using App.DataAccess.BlogDbContext;
+using Polly;
+using Polly.Extensions.Http;
+using App.Entity;
+using App.Entity.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +40,28 @@ builder.Services.AddDbContext<BlogDbContext>(options =>
 builder.Services.AddScoped<IRedisCache, RedisCache>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHttpClient<ICommentService, CommentService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]);
+})
+    .AddPolicyHandler(GetRetryPolicy())
+    .AddPolicyHandler(GetCircuitBreakerPolicy());
+
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+}
+
+static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
+}
+
 
 var app = builder.Build();
 

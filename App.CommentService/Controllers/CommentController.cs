@@ -4,7 +4,6 @@ using App.Entity.Database;
 using AutoMapper;
 using AzureRedisCacheDemo.Repositories.AzureRedisCache;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
 
 namespace App.CommentService.Controllers
 {
