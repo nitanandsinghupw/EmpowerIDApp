@@ -1,8 +1,7 @@
-﻿using AzureRedisCacheDemo.Helper;
-using Newtonsoft.Json;
-using StackExchange.Redis;
+﻿using Newtonsoft.Json;
+using IDatabase = StackExchange.Redis.IDatabase;
 
-namespace AzureRedisCacheDemo.Repositories.AzureRedisCache
+namespace App.Utility
 {
     public class RedisCache : IRedisCache
     {
@@ -39,7 +38,7 @@ namespace AzureRedisCacheDemo.Repositories.AzureRedisCache
 
         public bool SetCacheData<T>(string key, T value, DateTimeOffset expirationTime)
         {
-           
+
             TimeSpan expiryTime = expirationTime.DateTime.Subtract(DateTime.Now);
 
             var isSet = _db.StringSet(key, JsonConvert.SerializeObject(value, new JsonSerializerSettings()

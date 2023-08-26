@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using App.Entity.Interface;
+﻿using App.Entity.Interface;
 using Newtonsoft.Json;
 
 namespace App.Entity.Database

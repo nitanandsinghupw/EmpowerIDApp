@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\App.DataAccess\App.DataAccess.csproj" />
+    <ProjectReference Include="..\App.Utility\App.Utility.csproj" />
   </ItemGroup>
 
 </Project>

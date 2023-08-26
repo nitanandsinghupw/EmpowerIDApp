@@ -1,4 +1,4 @@
-﻿namespace AzureRedisCacheDemo.Repositories.AzureRedisCache
+﻿namespace App.Utility
 {
     public interface IRedisCache
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 
-namespace AzureRedisCacheDemo.Helper
+namespace App.Utility
 {
     public class ConnectionHelper
     {
@@ -9,9 +9,10 @@ namespace AzureRedisCacheDemo.Helper
 
         public static void Initialize(IConfiguration configuration)
         {
-            string con = configuration.GetConnectionString("RedisCacheConnection");
+            string? con = configuration.GetConnectionString("RedisCacheConnection");
 
-            lazyConnection = new Lazy<ConnectionMultiplexer>(() => {
+            lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+            {
                 return ConnectionMultiplexer.Connect(con);
             });
         }

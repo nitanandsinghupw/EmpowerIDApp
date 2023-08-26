@@ -1,14 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
-using AzureRedisCacheDemo.Repositories.AzureRedisCache;
-using AzureRedisCacheDemo.Helper;
 using App.DataAccess.BlogDbContext;
 using Polly;
 using Polly.Extensions.Http;
-using App.Entity;
 using App.Entity.Interface;
-using App.Entity.Service;
 using App.Entity.Database;
+using App.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
