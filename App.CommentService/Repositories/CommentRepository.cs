@@ -67,7 +67,7 @@ namespace App.CommentService.Repositories
             return blogPost;
         }
 
-        public async Task<Entity.Database.BlogPost> CreatePostAsync(Entity.Service.BlogPost post)
+        public async Task<Entity.Database.BlogPost> CreatePostAsync(Entity.Database.BlogPost post)
         {
             var entityBlogPost = _mapper.Map<App.Entity.Database.BlogPost>(post);
 

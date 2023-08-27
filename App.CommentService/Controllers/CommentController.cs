@@ -1,6 +1,6 @@
 using App.DataAccess.BlogDbContext;
 using App.Entity;
-using App.Entity.Service;
+using App.Entity.Database;
 using App.Utility;
 using AutoMapper;
 using MediatR;
@@ -74,7 +74,7 @@ namespace App.CommentService.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateComment(App.Entity.Service.Comment post)
+        public IActionResult CreateComment(App.Entity.Database.Comment post)
         {
             var entityBlogComments = _mapper.Map<App.Entity.Database.Comment>(post);
 

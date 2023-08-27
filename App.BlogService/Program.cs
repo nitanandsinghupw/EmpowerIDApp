@@ -7,6 +7,10 @@ using App.Entity.Interface;
 using App.Entity.Database;
 using App.Utility;
 using App.BlogService.Repositories;
+using App.BlogService.Commands;
+using MediatR;
+using App.BlogService.Handlers;
+using App.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +31,11 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogPost>());
+builder.Services.AddTransient<IRequestHandler<GetPostByIDCommand, BlogPost>, GetPostByIDHandler>();
+builder.Services.AddTransient<IRequestHandler<GetAllPostCommand, List<BlogPost>>, GetAllPostsHandler>();
+builder.Services.AddTransient<IRequestHandler<CreatePostCommand, BlogPost>, CreatePostHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdatePostCommand, ApiResponse<string>>, UpdatePostHandler>();
+builder.Services.AddTransient<IRequestHandler<DeletePostCommand, ApiResponse<string>>, DeletePostHandler>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddMemoryCache();
 // Add services to the container.

@@ -1,6 +1,6 @@
 ﻿using App.BlogService.Commands;
 using App.BlogService.Repositories;
-using App.Entity.Service;
+using App.Entity.Database;
 using MediatR;
 
 namespace App.BlogService.Handlers

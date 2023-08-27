@@ -1,6 +1,6 @@
 ﻿using App.BlogService.Commands;
 using App.CommentService.Repositories;
-using App.Entity.Service;
+using App.Entity.Database;
 using MediatR;
 
 namespace App.CommentService.Handlers

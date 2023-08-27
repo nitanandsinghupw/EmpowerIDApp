@@ -2,7 +2,7 @@
 using App.DataAccess.BlogDbContext;
 using App.Entity;
 using App.Entity.Interface;
-using App.Entity.Service;
+using App.Entity.Database;
 using App.Utility;
 using AutoMapper;
 using MediatR;
@@ -61,7 +61,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePost(App.Entity.Service.BlogPost post)
+        public IActionResult CreatePost(App.Entity.Database.BlogPost post)
         {
             var entityBlogPost = _mapper.Map<App.Entity.Database.BlogPost>(post);
 
@@ -73,7 +73,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, UpdateBlogPost updatedPost)
+        public IActionResult UpdatePost(int id, BlogPost BlogPost)
         {
             var existingPost = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
             if (existingPost == null)
@@ -81,8 +81,8 @@ namespace BlogAPI.Controllers
                 return NotFound(new ApiResponse<string> { Success = false, Message = "Post not found" });
             }
 
-            existingPost.Title = updatedPost.Title;
-            existingPost.Content = updatedPost.Content;
+            existingPost.Title = BlogPost.Title;
+            existingPost.Content = BlogPost.Content;
 
             _dbContext.SaveChanges();
             _redisCache.RemoveData("posts");
