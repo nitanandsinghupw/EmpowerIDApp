@@ -6,6 +6,8 @@ using Polly.Extensions.Http;
 using App.Entity.Interface;
 using App.Entity.Database;
 using App.Utility;
+using System.Reflection;
+using App.BlogService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,8 @@ builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogPost>());
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddMemoryCache();
 // Add services to the container.
 builder.Services.AddControllers()

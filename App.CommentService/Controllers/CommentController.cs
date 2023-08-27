@@ -3,6 +3,7 @@ using App.Entity;
 using App.Entity.Service;
 using App.Utility;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.CommentService.Controllers
@@ -14,12 +15,14 @@ namespace App.CommentService.Controllers
         private readonly BlogDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IRedisCache _redisCache;
+        private readonly IMediator _mediator;
 
-        public CommentController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache)
+        public CommentController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache, IMediator mediator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _redisCache = redisCache;
+            _mediator = mediator;
         }
 
         private IActionResult ApiResponse<T>(T data)

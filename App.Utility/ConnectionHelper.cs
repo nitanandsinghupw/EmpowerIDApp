@@ -5,7 +5,7 @@ namespace App.Utility
 {
     public class ConnectionHelper
     {
-        private static Lazy<ConnectionMultiplexer> lazyConnection;
+        private static Lazy<ConnectionMultiplexer>? lazyConnection;
 
         public static void Initialize(IConfiguration configuration)
         {

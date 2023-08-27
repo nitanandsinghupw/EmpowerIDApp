@@ -9,7 +9,6 @@ namespace App.DataAccess.BlogDbContext
             : base(options)
         {
         }
-
         public DbSet<BlogPost> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
 

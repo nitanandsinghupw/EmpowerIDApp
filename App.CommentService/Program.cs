@@ -22,6 +22,7 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddMemoryCache();
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogDbContext>());
 // Add services to the container.
 builder.Services.AddControllers()
    .AddNewtonsoftJson(options =>

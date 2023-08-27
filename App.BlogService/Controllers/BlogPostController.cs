@@ -1,9 +1,11 @@
-﻿using App.DataAccess.BlogDbContext;
+﻿using App.BlogService.Commands;
+using App.DataAccess.BlogDbContext;
 using App.Entity;
 using App.Entity.Interface;
 using App.Entity.Service;
 using App.Utility;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -17,13 +19,15 @@ namespace BlogAPI.Controllers
         private readonly IMapper _mapper;
         private readonly IRedisCache _redisCache;
         private readonly ICommentService _commentService;
+        private readonly IMediator _mediator;
 
-        public BlogPostController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache, ICommentService  commentService)
+        public BlogPostController(BlogDbContext dbContext, IMapper mapper, IRedisCache redisCache, ICommentService  commentService, IMediator mediator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _redisCache = redisCache;
             _commentService = commentService;
+            _mediator = mediator;
         }
 
         private IActionResult ApiResponse<T>(T data)
@@ -32,26 +36,13 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet]
-        public  IActionResult GetPosts()
+        public  async  Task<IActionResult> GetPosts()
         {             
             List<App.Entity.Database.BlogPost> blogPosts = new List<App.Entity.Database.BlogPost>();
-            var cacheData = _redisCache.GetCacheData<List<App.Entity.Database.BlogPost>>("posts");
-            if (cacheData != null)
-            {
-                blogPosts = cacheData;
-            }
-
-            blogPosts = _dbContext.Posts.ToList();
-            // Fetch comments for each blog post and map them
-            foreach (var post in blogPosts)
-            {
-                post.Comments = _commentService.GetPostComments(post.Id).Result;
-            }
+            blogPosts = await _mediator.Send(new GetAllPostCommand());
 
             if (blogPosts != null)
-            {
-                var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-                _redisCache.SetCacheData("posts", blogPosts, expirationTime);
+            {              
                 return ApiResponse(blogPosts);
             }
             else
@@ -62,28 +53,10 @@ namespace BlogAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPostById(int id)
+        public async Task<IActionResult> GetPostById(int id)
         {
             App.Entity.Database.BlogPost blogPost = new App.Entity.Database.BlogPost();
-            var cacheData = _redisCache.GetCacheData<App.Entity.Database.BlogPost>("blogPost-"+ id);
-            if (cacheData != null)
-            {
-                blogPost = cacheData;
-            }
-
-            blogPost = _dbContext.Posts.FirstOrDefault(p => p.Id == id);            
-
-            if (blogPost == null)
-            {
-                return NotFound(new ApiResponse<string> { Success = false, Message = "Post not found" });
-            }
-
-            var comment = _commentService.GetPostComments(id);
-
-
-            blogPost.Comments = comment.Result.ToList();
-            var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-            _redisCache.SetCacheData<App.Entity.Database.BlogPost>("blogPost-" + id, blogPost, expirationTime);
+            blogPost =await _mediator.Send(new GetPostByIDCommand() { Id = id }) ;
             return ApiResponse(blogPost);
         }
 
