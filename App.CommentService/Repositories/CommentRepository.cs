@@ -4,15 +4,15 @@ using App.Utility;
 using AutoMapper;
 using App.Entity.Interface;
 
-namespace App.BlogService.Repositories
+namespace App.CommentService.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class CommentRepository : ICommentRepository
     {
         private readonly BlogDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IRedisCache _redisCache;
         private readonly ICommentService _commentService;
-        public PostRepository(BlogDbContext blogDbContext, IMapper mapper, IRedisCache redisCache, ICommentService commentService)
+        public CommentRepository(BlogDbContext blogDbContext, IMapper mapper, IRedisCache redisCache, ICommentService commentService)
         {
             _dbContext = blogDbContext;
             _mapper = mapper;

@@ -1,6 +1,6 @@
-﻿namespace App.BlogService.Repositories
+﻿namespace App.CommentService.Repositories
 {
-    public interface IPostRepository
+    public interface ICommentRepository
     {
         public Task<List<App.Entity.Database.BlogPost>> GetPostsAsync();
         public Task<App.Entity.Database.BlogPost> GetPostByIdAsync(int id);

@@ -6,7 +6,6 @@ using Polly.Extensions.Http;
 using App.Entity.Interface;
 using App.Entity.Database;
 using App.Utility;
-using System.Reflection;
 using App.BlogService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

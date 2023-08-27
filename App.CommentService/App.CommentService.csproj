@@ -20,10 +20,4 @@
     <ProjectReference Include="..\App.Entity\App.Entity.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Handlers\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>
