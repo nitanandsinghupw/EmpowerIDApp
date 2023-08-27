@@ -4,7 +4,7 @@ using MediatR;
 
 namespace App.BlogService.Handlers
 {
-    public class GetAllPostsHandler : IRequestHandler<GetAllPostCommand, List<App.Entity.Database.BlogPost>>
+    public class GetAllPostsHandler : IRequestHandler<GetAllPostCommand, List<Entity.Database.BlogPost>>
     {
         private readonly IPostRepository _postRepository;
         public GetAllPostsHandler(IPostRepository postRepository)

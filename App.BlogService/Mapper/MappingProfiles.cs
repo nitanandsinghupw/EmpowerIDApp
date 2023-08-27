@@ -7,7 +7,7 @@ namespace App.BlogService.MApper
     {
         public MappingProfiles()
         {
-            CreateMap<BlogPost, Entity.Database.BlogPost>().ReverseMap();           
+            CreateMap<BlogPost, BlogPost>().ReverseMap();           
         }
     }
 }

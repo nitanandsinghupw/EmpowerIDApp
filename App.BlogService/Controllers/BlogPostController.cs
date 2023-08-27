@@ -38,7 +38,7 @@ namespace BlogAPI.Controllers
         [HttpGet]
         public  async  Task<IActionResult> GetPosts()
         {             
-            List<App.Entity.Database.BlogPost> blogPosts = new List<App.Entity.Database.BlogPost>();
+            List<BlogPost> blogPosts = new List<BlogPost>();
             blogPosts = await _mediator.Send(new GetAllPostCommand());
 
             if (blogPosts != null)
@@ -55,15 +55,15 @@ namespace BlogAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostById(int id)
         {
-            App.Entity.Database.BlogPost blogPost = new App.Entity.Database.BlogPost();
+            BlogPost blogPost = new BlogPost();
             blogPost =await _mediator.Send(new GetPostByIDCommand() { Id = id }) ;
             return ApiResponse(blogPost);
         }
 
         [HttpPost]
-        public IActionResult CreatePost(App.Entity.Database.BlogPost post)
+        public IActionResult CreatePost(BlogPost post)
         {
-            var entityBlogPost = _mapper.Map<App.Entity.Database.BlogPost>(post);
+            var entityBlogPost = _mapper.Map<BlogPost>(post);
 
             _dbContext.Posts.Add(entityBlogPost);
             _dbContext.SaveChanges();

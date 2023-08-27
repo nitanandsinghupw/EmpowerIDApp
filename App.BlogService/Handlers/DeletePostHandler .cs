@@ -5,7 +5,7 @@ using MediatR;
 
 namespace App.BlogService.Handlers
 {
-    public class DeletePostHandler : IRequestHandler<DeletePostCommand, Entity.ApiResponse<string>>
+    public class DeletePostHandler : IRequestHandler<DeletePostCommand, ApiResponse<string>>
     {
         private readonly IPostRepository _postRepository;
         public DeletePostHandler(IPostRepository postRepository)
@@ -13,7 +13,7 @@ namespace App.BlogService.Handlers
             _postRepository = postRepository;
         }     
 
-        public async Task<Entity.ApiResponse<string>> Handle(DeletePostCommand command, CancellationToken cancellationToken)
+        public async Task<ApiResponse<string>> Handle(DeletePostCommand command, CancellationToken cancellationToken)
         {      
             var result = await _postRepository.DeletePostAsync(command.Id);
 

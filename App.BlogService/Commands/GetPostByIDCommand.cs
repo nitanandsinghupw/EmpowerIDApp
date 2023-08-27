@@ -2,7 +2,7 @@
 
 namespace App.BlogService.Commands
 {
-    public class GetPostByIDCommand : IRequest<App.Entity.Database.BlogPost>
+    public class GetPostByIDCommand : IRequest<Entity.Database.BlogPost>
     {
         public int Id { get; set; }   
     }

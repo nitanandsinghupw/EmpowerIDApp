@@ -29,6 +29,7 @@ builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection(
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+builder.Services.AddSingleton<ICommentService, CommentService>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogPost>());
 builder.Services.AddTransient<IRequestHandler<GetPostByIDCommand, BlogPost>, GetPostByIDHandler>();

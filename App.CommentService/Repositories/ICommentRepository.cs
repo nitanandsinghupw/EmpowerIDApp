@@ -1,11 +1,14 @@
-﻿namespace App.CommentService.Repositories
+﻿using App.Entity.Database;
+
+namespace App.CommentService.Repositories
 {
     public interface ICommentRepository
-    {
-        public Task<List<App.Entity.Database.BlogPost>> GetPostsAsync();
-        public Task<App.Entity.Database.BlogPost> GetPostByIdAsync(int id);
-        public Task<App.Entity.Database.BlogPost> CreatePostAsync(App.Entity.Database.BlogPost post);
-        public Task<bool> UpdatePostAsync(int id, App.Entity.Database.BlogPost blogPost);
-        public Task<bool> DeletePostAsync(int id);        
+    {      
+        public Task<Comment> GetCommentById(int id);
+        public Task<List<Comment>> GetCommentByPostId(int id);
+        public Task<Comment> CreateComment(Comment post);
+        public Task<bool> UpdateComment(int id, Comment updatedComment);
+        public Task<bool> DeleteComment(int id);
+        public Task<bool> DeletePostComment(int postId);
     }
 }

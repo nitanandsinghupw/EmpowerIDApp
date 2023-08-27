@@ -2,7 +2,7 @@
 
 namespace App.BlogService.Commands
 {
-    public class CreatePostCommand : IRequest<App.Entity.Database.BlogPost>
+    public class CreatePostCommand : IRequest<Entity.Database.BlogPost>
     {
         public string? Title { get; set; }
         public string? Content { get; set; }

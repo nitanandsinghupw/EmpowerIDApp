@@ -21,8 +21,8 @@ namespace App.BlogService.Repositories
         } 
         public async Task<List<Entity.Database.BlogPost>> GetPostsAsync()
         {
-            List<App.Entity.Database.BlogPost> blogPosts = new List<App.Entity.Database.BlogPost>();
-            var cacheData = _redisCache.GetCacheData<List<App.Entity.Database.BlogPost>>("posts");
+            List<Entity.Database.BlogPost> blogPosts = new List<Entity.Database.BlogPost>();
+            var cacheData = _redisCache.GetCacheData<List<Entity.Database.BlogPost>>("posts");
             if (cacheData != null)
             {
                 blogPosts = cacheData;
@@ -47,8 +47,8 @@ namespace App.BlogService.Repositories
 
         public async Task<Entity.Database.BlogPost> GetPostByIdAsync(int id)
         {
-            App.Entity.Database.BlogPost blogPost = new App.Entity.Database.BlogPost();
-            var cacheData = _redisCache.GetCacheData<App.Entity.Database.BlogPost>("blogPost-" + id);
+            Entity.Database.BlogPost blogPost = new Entity.Database.BlogPost();
+            var cacheData = _redisCache.GetCacheData<Entity.Database.BlogPost>("blogPost-" + id);
             if (cacheData != null)
             {
                 blogPost = cacheData;
@@ -61,7 +61,7 @@ namespace App.BlogService.Repositories
                 var comment = _commentService.GetPostComments(id);
                 blogPost.Comments = comment.Result.ToList();
                 var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-                _redisCache.SetCacheData<App.Entity.Database.BlogPost>("blogPost-" + id, blogPost, expirationTime);                
+                _redisCache.SetCacheData("blogPost-" + id, blogPost, expirationTime);                
             }
 
             return blogPost;
@@ -69,7 +69,7 @@ namespace App.BlogService.Repositories
 
         public async Task<Entity.Database.BlogPost> CreatePostAsync(Entity.Database.BlogPost post)
         {
-            var entityBlogPost = _mapper.Map<App.Entity.Database.BlogPost>(post);
+            var entityBlogPost = _mapper.Map<Entity.Database.BlogPost>(post);
 
             await _dbContext.Posts.AddAsync(entityBlogPost);
             await _dbContext.SaveChangesAsync();

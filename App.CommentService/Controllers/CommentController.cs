@@ -47,7 +47,7 @@ namespace App.CommentService.Controllers
             }
 
             var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-            _redisCache.SetCacheData<App.Entity.Database.Comment>("Comment-" + id, comment, expirationTime);
+            _redisCache.SetCacheData("Comment-" + id, comment, expirationTime);
             return ApiResponse(comment);
         }
 
@@ -68,15 +68,15 @@ namespace App.CommentService.Controllers
             }
 
             var expirationTime = DateTimeOffset.Now.AddMinutes(5.0);
-            _redisCache.SetCacheData<List<App.Entity.Database.Comment>>("Comments-Post-" + id, comments, expirationTime);
+            _redisCache.SetCacheData("Comments-Post-" + id, comments, expirationTime);
             return ApiResponse(comments);
         }
 
 
         [HttpPost]
-        public IActionResult CreateComment(App.Entity.Database.Comment post)
+        public IActionResult CreateComment(Comment post)
         {
-            var entityBlogComments = _mapper.Map<App.Entity.Database.Comment>(post);
+            var entityBlogComments = _mapper.Map<Comment>(post);
 
             _dbContext.Comments.Add(entityBlogComments);
             _dbContext.SaveChanges();

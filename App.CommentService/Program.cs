@@ -2,6 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
 using App.DataAccess.BlogDbContext;
 using App.Utility;
+using App.BlogService.Commands;
+using App.BlogService.Handlers;
+using App.BlogService.Repositories;
+using App.Entity.Database;
+using App.Entity;
+using MediatR;
+using App.CommentService.Commands;
+using App.CommentService.Handlers;
+using App.CommentService.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +31,13 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddMemoryCache();
-builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogDbContext>());
+builder.Services.AddMediatR(c => c.RegisterServicesFromAssemblyContaining<BlogPost>());
+builder.Services.AddTransient<IRequestHandler<GetCommentByPostIdCommand, List<Comment>>, GetCommentByPostIdHandler>();
+builder.Services.AddTransient<IRequestHandler<GetCommentByIdCommand, Comment>, GetCommentByIdHandler>();
+builder.Services.AddTransient<IRequestHandler<CreateCommentCommand, Comment>, CreateCommentHandler>();
+builder.Services.AddTransient<IRequestHandler<UpdateCommentCommand, ApiResponse<string>>, UpdateCommentHandler>();
+builder.Services.AddTransient<IRequestHandler<DeleteCommentCommand, ApiResponse<string>>, DeleteCommentHandler>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 // Add services to the container.
 builder.Services.AddControllers()
    .AddNewtonsoftJson(options =>

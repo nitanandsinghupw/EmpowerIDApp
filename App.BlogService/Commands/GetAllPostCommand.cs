@@ -2,7 +2,7 @@
 
 namespace App.BlogService.Commands
 {
-    public class GetAllPostCommand : IRequest<List<App.Entity.Database.BlogPost>>
+    public class GetAllPostCommand : IRequest<List<Entity.Database.BlogPost>>
     {     
         
     }    
