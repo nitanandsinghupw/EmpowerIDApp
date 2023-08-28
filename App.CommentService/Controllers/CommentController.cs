@@ -3,6 +3,7 @@ using App.Entity;
 using App.Entity.Database;
 using App.Utility;
 using AutoMapper;
+using BlogAPI;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,7 +75,7 @@ namespace App.CommentService.Controllers
 
 
         [HttpPost]
-        public IActionResult CreateComment(Comment post)
+        public IActionResult CreateComment(CommentModel post)
         {
             var entityBlogComments = _mapper.Map<Comment>(post);
 

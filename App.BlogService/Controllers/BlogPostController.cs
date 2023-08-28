@@ -61,7 +61,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePost(BlogPost post)
+        public IActionResult CreatePost(BlogPostModel post)
         {
             var entityBlogPost = _mapper.Map<BlogPost>(post);
 
@@ -73,7 +73,7 @@ namespace BlogAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePost(int id, BlogPost BlogPost)
+        public IActionResult UpdatePost(int id, UpdateBlogPostModel BlogPost)
         {
             var existingPost = _dbContext.Posts.FirstOrDefault(p => p.Id == id);
             if (existingPost == null)

@@ -2,9 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using AspNetCoreRateLimit;
 using App.DataAccess.BlogDbContext;
 using App.Utility;
-using App.BlogService.Commands;
-using App.BlogService.Handlers;
-using App.BlogService.Repositories;
 using App.Entity.Database;
 using App.Entity;
 using MediatR;
@@ -24,7 +21,8 @@ IConfiguration configuration = new ConfigurationBuilder()
 ConnectionHelper.Initialize(configuration);
 
 var DefaultConnection = builder.Configuration.GetConnectionString("DefaultConnection");
-
+builder.Services.AddControllers();
+   
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
@@ -38,12 +36,6 @@ builder.Services.AddTransient<IRequestHandler<CreateCommentCommand, Comment>, Cr
 builder.Services.AddTransient<IRequestHandler<UpdateCommentCommand, ApiResponse<string>>, UpdateCommentHandler>();
 builder.Services.AddTransient<IRequestHandler<DeleteCommentCommand, ApiResponse<string>>, DeleteCommentHandler>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-// Add services to the container.
-builder.Services.AddControllers()
-   .AddNewtonsoftJson(options =>
-   options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BlogDbContext>(options =>
@@ -60,7 +52,6 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 

@@ -1,5 +1,6 @@
 ﻿using App.Entity.Database;
 using AutoMapper;
+using BlogAPI;
 
 namespace App.BlogService.MApper
 {
@@ -7,7 +8,7 @@ namespace App.BlogService.MApper
     {
         public MappingProfiles()
         {
-            CreateMap<Comment, Comment>().ReverseMap();           
+            CreateMap<CommentModel, Comment>().ReverseMap();
         }
     }
 }
